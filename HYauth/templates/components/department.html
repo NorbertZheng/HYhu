@@ -1,0 +1,68 @@
+{% if user.department != 0 %}
+<div>
+	{% if user.department == 1 %}
+	<p>网络技术部</p>
+	{% endif %}
+	{% if user.department == 2 %}
+	<p>文艺部</p>
+	{% endif %}
+	{% if user.department == 3 %}
+	<p>网络技术部 & 文艺部</p>
+	{% endif %}
+	{% if user.department == 4 %}
+	<p>秘书处</p>
+	{% endif %}
+	{% if user.department == 8 %}
+	<p>学习部</p>
+	{% endif %}
+	{% if user.department == 12 %}
+	<p>秘书处 & 学习部</p>
+	{% endif %}
+	{% if user.department == 16 %}
+	<p>组织部</p>
+	{% endif %}
+	{% if user.department == 32 %}
+	<p>新闻宣传部</p>
+	{% endif %}
+	{% if user.department == 48 %}
+	<p>组织部 & 新闻宣传部</p>
+	{% endif %}
+	{% if user.department == 64 %}
+	<p>体育部</p>
+	{% endif %}
+	{% if user.department == 128 %}
+	<p>实践外联部</p>
+	{% endif %}
+	{% if user.department == 192 %}
+	<p>体育部 & 实践外联部</p>
+	{% endif %}
+	{% if user.department == 256 %}
+	<p>社团中心</p>
+	{% endif %}
+	{% if user.department == 512 %}
+	<p>生活权益部</p>
+	{% endif %}
+	{% if user.department == 768 %}
+	<p>社团中心 & 生活权益部</p>
+	{% endif %}
+</div>
+{% endif %}
+{% if user.department_position != 0 %}
+<div>
+	{% if user.department_position == 1 %}
+	<p>主席</p>
+	{% endif %}
+	{% if user.department_position == 2 %}
+	<p>副主席</p>
+	{% endif %}
+	{% if user.department_position == 3 %}
+	<p>部长</p>
+	{% endif %}
+	{% if user.department_position == 4 %}
+	<p>副部</p>
+	{% endif %}
+	{% if user.department_position == 5 %}
+	<p>部委</p>
+	{% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,14 @@
+{% if current_user.class_room != 0 %}
+{% if current_user.class_room == 1 %}
+一班
+{% endif %}
+{% if current_user.class_room == 2 %}
+二班
+{% endif %}
+{% if current_user.class_room == 3 %}
+三班
+{% endif %}
+{% if current_user.class_room == 4 %}
+四班
+{% endif %}
+{% endif %}

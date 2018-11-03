@@ -1,0 +1,186 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+
+{% block title %}编辑Profile{% endblock %}
+
+{% block content %}
+<div class="container" style = "padding: 100px 0 100px 0;">
+    <div class="row">
+		<div class = "col s4" style = "display: flex; flex-direction: column;align-items: center;">
+			<img class="img-rounded profile-thumbnail" src="{{ face }}">
+			<h3 style = "margin: 0;margin-top: 20px;">{{ user.name }}</h3>
+		</div>
+		<form class="col s8" id="edit_profile" action="" method="post">
+			<div class="row">
+				<div class="input-field col s6">
+					<i class="material-icons prefix">local_library</i>
+					<input id="studentId" type="text" class="validate" disabled = "true" value = "{{ user.studentId }}">
+					<label for="studentId">学号</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">account_circle</i>
+					<input id="role" type="text" class="validate" disabled = "true" value = "{{ user.role }}">
+					<label for="role">Role</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">phone</i>
+					<input name = "phone" id="phone" type="tel" class="validate" value = "{{ user.phone }}">
+					<label for="phone">手机号码</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">location_on</i>
+					<input name = "location" id="location" type="text" class="validate" value = "{{ user.location }}">
+					<label for="location">地址</label>
+				</div>
+				<div class="input-field col s6" id = "department_position_div">
+					<i class="material-icons prefix">child_care</i>
+					<select class="icons" name = "department_position" id = "department_position">
+						<option value="0" disabled selected>默认是没有加入部门哦</option>
+						<option value="1" id = "department_position_1">主席</option>
+						<option value="2" id = "department_position_2">副主席</option>
+						<option value="3" id = "department_position_3">部长</option>
+						<option value="4" id = "department_position_4">副部</option>
+						<option value="5" id = "department_position_5">部委</option>
+						<option value="0" id = "department_position_0">没有加入部门</option>
+					</select>
+					<label>学生会职务</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">details</i>
+					<select class="icons" name = "department1" id = "department1">
+						<option value="0" disabled selected>默认是没有加入部门哦</option>
+						<option value="1" id = "department_1">网络技术部</option>
+						<option value="2" id = "department_2">文艺部</option>
+						<option value="4" id = "department_4">秘书处</option>
+						<option value="8" id = "department_8">学习部</option>
+						<option value="16" id = "department_16">组织部</option>
+						<option value="32" id = "department_32">新闻宣传部</option>
+						<option value="64" id = "department_64">体育部</option>
+						<option value="128" id = "department_128">实践外联部</option>
+						<option value="256" id = "department_256">社团中心</option>
+						<option value="512" id = "department_512">生活权益部</option>
+					</select>
+					<label>学生会部门</label>
+				</div>
+				<div class="input-field col s6" id = "department2">
+					<i class="material-icons prefix">details</i>
+					<select class="icons" name = "department2">
+						<option value="0" disabled selected>默认是没有加入部门哦</option>
+						<option value="1" id = "department2_1">网络技术部</option>
+						<option value="2" id = "department2_2">文艺部</option>
+						<option value="4" id = "department2_4">秘书处</option>
+						<option value="8" id = "department2_8">学习部</option>
+						<option value="16" id = "department2_16">组织部</option>
+						<option value="32" id = "department2_32">新闻宣传部</option>
+						<option value="64" id = "department2_64">体育部</option>
+						<option value="128" id = "department2_128">实践外联部</option>
+						<option value="256" id = "department2_256">社团中心</option>
+						<option value="512" id = "department2_512">生活权益部</option>
+					</select>
+					<label>学生会部门</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">developer_board</i>
+					<select class="icons" name = "major" id = "major">
+						<option value="0" disabled selected>你现在的专业是什么呀</option>
+						<option value="1">工科试验班</option>
+						<option value="2">理科试验班</option>
+						<option value="3">人文试验班</option>
+						<option value="4">数理金融试验班</option>
+					</select>
+					<label>专业</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">class</i>
+					<select class="icons" name = "class_room" id = "class_room">
+						<option value="0" disabled selected>在哪个班啊</option>
+						<option value="1" id = "department_position_1">一班</option>
+						<option value="2" id = "department_position_2">二班</option>
+						<option value="3" id = "department_position_3">三班</option>
+						<option value="4" id = "department_position_4">四班</option>
+					</select>
+					<label>班级</label>
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">description</i>
+					<textarea id="about_me" name = "about_me" type = "text" class="materialize-textarea"></textarea>
+					<label for="about_me">关于我</label>
+				</div>
+			</div>
+			<p class="waves-effect waves-light btn" onclick="form_submit();" type="submit" style = "align-item: center;">
+                确认修改
+                <i class="material-icons right">send</i>
+            </p>
+			{% csrf_token %}
+		</form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	$(document).ready(function() {
+		$('select').material_select();
+		$("#department1").val("0");
+		$('#department1').removeAttr("disabled");
+		$('#department1').material_select();
+		$("#department2").val("0");
+		$("#department2").hide();
+		$('#department_position').on("change", function(){
+			department_position = $('#department_position').val();
+			//alert(department_position);
+			if(department_position == 1 || department_position == 2){
+				$('#department_position_div').attr("class", "input-field col s12");
+				$('#department1').removeAttr("disabled");
+				$('#department1').material_select();
+				$("#department2").removeAttr("disabled");
+				$('#department2').show();
+				//console.log($("#department1").val());
+				//console.log($("#department2").val());
+			} else if(department_position == 0){
+				//alert('disabled');
+				$('#department_position_div').attr("class", "input-field col s6");
+				$("#department1").attr("disabled","true");
+				$('#department1').material_select();
+				$("#department2").attr("disabled","true");
+				$("#department2").hide();
+				//console.log($("#department1").val());
+				//console.log($("#department2").val());
+			} else {
+				//alert('disabled');
+				$('#department_position_div').attr("class", "input-field col s6");
+				$('#department1').removeAttr("disabled");
+				$('#department1').material_select();
+				$("#department2").attr("disabled","true");
+				$("#department2").hide();
+				//console.log($("#department1").val());
+				//console.log($("#department2").val());
+			};
+		});
+	});
+	function form_submit(){
+		edit_profile.submit();
+	};
+	function IsNum(s)
+	{
+		if(s != null){
+			var r, re;
+			re = /\d*/i;
+			r = s.match(re);
+			return (r==s)?true:false;
+		}
+		return false;
+	};
+	function strlen(str){
+		var len = 0;
+		for (var i = 0; i < str.length;i++) { 
+			var c = str.charCodeAt(i);  
+			if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) { 
+				len++; 
+			} else { 
+				len += 2; 
+			} 
+		} 
+		return len;
+	};
+</script>
+{% endblock %}

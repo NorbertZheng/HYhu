@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<div class = "col s4">
+	<div class="card">
+		<div class="card-image waves-effect waves-block waves-light">
+			<div class="carousel carousel-slider">
+				{% if signup.imgs %}
+				{% for img in signup.imgs %}
+				<a class="carousel-item" style = "height: auto;" href = "{% url 'signUp_detail' signup.id %}"><img style = "margin: 0;" class="activator" src = "{{ MEDIA_URL }}{{ img }}"/></a>
+				{% endfor %}
+				{% else %}
+				<a class="carousel-item" href="#"><img class="activator" src="{% static 'img/fassial.jpeg' %}"></a>
+				{% endif %}
+			</div>
+		</div>
+		<div class="card-content">
+			<span class="card-title activator grey-text text-darken-4">{{ signup.title }}<i class="material-icons right">more_vert</i></span>
+			<p><a href = "{% url 'signUp_detail' signup.id %}">For More</a></p>
+		</div>
+		<div class="card-reveal">
+			<span class="card-title grey-text text-darken-4">{{ signup.title }}<i class="material-icons right">close</i></span>
+			<p>发布者:{{ signup.user }}</p>
+			<p>发布时间:{{ signup.timestamp }}</p>
+			<p>报名截止:{{ signup.deadline }}</p>
+			<p>活动内容:{{ signup.content }}</p>
+		</div>
+	</div>
+</div>

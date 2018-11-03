@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ signup.title }} -- By {{ user.name }}{% endblock %}
+
+{% block content %}
+<main>
+	<div class="parallax-container">
+		<div class="parallax"><img src="{% static 'img/signUp_detail_background1.jpg' %}"></div>
+	</div>
+	<div class="section white">
+		<div class="row container">
+			<div class = "col s4" style = "display: flex; flex-direction: column;align-items: center;margin: 100px 0 100px 0;">
+				<img class="img-rounded profile-thumbnail" src="{{ face }}">
+				<h3 style = "margin: 0;margin-top: 20px;">{{ user.name }}</h3>
+			</div>
+			<div class = "col s8" style = "display: flex; flex-direction: column;align-items: left;margin: 100px 0 100px 0;">
+				<h3>{{ signup.title }}</h3>
+				<div style = "diaplay:relative;">
+					<p>发布于: {{ signup.timestamp }}</p>
+					<p>将于 {{ signup.deadline }} 截止</p>
+				</div>
+				<div>
+					<h5>主要内容</h5>
+					<div class="progress">
+						<div class="determinate blue" style="width: 20%"></div>
+					</div>
+					<p>{{ signup.content }}</p>
+				</div>				
+			</div>
+			<div class = "col s4">
+				{% if is_signUper %}
+				<button class="btn waves-effect waves-light" type="submit" name="action" style = "width:100%;" onclick = "calcel_signup();">
+					取消报名
+					<i class="material-icons right">send</i>
+				</button>
+				{% else %}
+				<button class="btn waves-effect waves-light" type="submit" name="action" style = "width:100%;" onclick = "signup();">
+					我要报名
+					<i class="material-icons right">send</i>
+				</button>
+				{% endif %}
+			</div>
+		</div>
+		<div class="row container">
+			{% if users %}
+			<table>
+				<thead>
+					<tr>
+						<th>姓名</th>
+						<th>专业</th>
+						<th>班级</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for current_user in users %}
+					<tr>
+						<td>{{ current_user.name }}</td>
+						<td>
+							{% include 'components/current_user_major.html' %}
+						</td>
+						<td>
+							{% include 'components/current_user_class.html' %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<h3>貌似还没有人报名诶，快去群里宣传一下吧.</h3>
+			{% endif %}
+		</div>
+	</div>
+	<div class="parallax-container">
+		<div class="parallax"><img src="{% static 'img/signUp_detail_background2.jpg' %}"></div>
+	</div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+	$(document).ready(function(){
+		$('.parallax').parallax();
+	});
+	var url = "{% url 'signUp_detail' signup.id %}";
+	var calcel_signup_url = "{% url 'signUp_cancel_signup' signup.id %}";
+	var signup_url = "{% url 'signUp_signup' signup.id %}"
+	function calcel_signup(event){
+		window.location.href = calcel_signup_url;
+	};
+	function signup(event){
+		window.location.href = signup_url;
+	};
+</script>
+{% endblock %}

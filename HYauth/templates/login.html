@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}用户登录{% endblock %}
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m6 offset-m3">
+                <h4>登录</h4>
+                <div class="progress">
+                    <div class="determinate blue" style="width: 20%"></div>
+                </div>
+                <form class="row" id="student_login" action="" method="post">
+                    <div class="input-field col s12">
+                        <input name="studentId" class="validate" id="studentId" type="text">
+                        <label for="studentId">学号</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input name="password" class="validate" id="password" type="password">
+                        <label class="active" for="password">密码</label>
+                    </div>
+                    <p class="waves-effect waves-light btn" onclick="form_submit();" type="submit">
+                        登录
+                        <i class="material-icons right">send</i>
+                    </p>
+					{% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+ </section>
+{% endblock %}
+{% block scripts %}
+<script>
+	$(document).ready(function(){
+		//alert('document ready!');
+		var state_success = '{{ state.success }}';
+		var state_message = '{{ state.message }}';
+		if(state_message != ''){
+			//console.log(state_message);
+			var toastHTML = '<span>' + state_message + '</span><button class="btn-flat toast-action">Undo</button>';
+			console.log(toastHTML);
+			Materialize.toast(toastHTML, 4000);
+		}
+	});
+	function form_submit(){
+		var studentId = $('#studentId').val();
+		var password = $('#password').val();
+		
+		//检查学号是否为数字且长度为13
+		var studentId_is_num = IsNum(studentId);
+		if(!studentId_is_num){
+			Materialize.toast('你的学号不全是数字啊?', 4000);
+			return;
+		}
+		var studentId_len = strlen(studentId);
+		if(studentId_len != 13){
+			Materialize.toast('再看看学号吧，长度不大对诶.', 4000);
+			return;
+		}
+		
+		
+		//检查密码是否大于等于6位
+		var password_len = strlen(password);
+		if(password_len < 6){
+			Materialize.toast('密码别太短，要至少6位(#`O′)', 4000);
+			return;
+		}
+		student_login.submit();
+	};
+	function IsNum(s)
+	{
+		if(s != null){
+			var r, re;
+			re = /\d*/i;
+			r = s.match(re);
+			return (r==s)?true:false;
+		}
+		return false;
+	};
+	function strlen(str){
+		var len = 0;
+		for (var i = 0; i < str.length;i++) { 
+			var c = str.charCodeAt(i);  
+			if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) { 
+				len++; 
+			} else { 
+				len += 2; 
+			} 
+		} 
+		return len;
+	};
+</script>
+{% endblock %}

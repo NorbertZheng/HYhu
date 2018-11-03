@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}新的报名 -- By {{ user.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style = "padding: 100px 0 100px 0;">
+    <div class="row">
+		<div class = "col s4" style = "display: flex; flex-direction: column;align-items: center;margin-top: 100px;">
+			<img class="img-rounded profile-thumbnail" src="{{ face }}">
+			<h3 style = "margin: 0;margin-top: 20px;">{{ user.name }}</h3>
+		</div>
+		<form class="col s8" id="signUp_new" action="" method="post" enctype="multipart/form-data">
+			<h4>发布新的报名</h4>
+            <div class="progress">
+                <div class="determinate blue" style="width: 20%"></div>
+            </div>
+			<div class="row">
+				<div class="input-field col s12">
+					<i class="material-icons prefix">account_circle</i>
+					<input id="title" type="text" name = "title" class="validate" value = "">
+					<label for="title">标题</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">account_circle</i>
+					<input id = "enddate" name = "enddate" type="date" class="datepicker" value="2018-11-03">
+					<label for="enddate">结束日期</label>
+				</div>
+				<div class="input-field col s6">
+					<i class="material-icons prefix">account_circle</i>
+					<input id = "endtime" name = "endtime" type="text" class="timepicker">
+					<label for="endtime">结束时间</label>
+				</div>
+				<div class="input-field col s12">
+					<div class="file-field input-field">
+						<div class="btn">
+							<span>File<i class="material-icons right">file_upload</i></span>
+							<input type="file" multiple name = "backgroundImgUrls">
+						</div>
+						<div class="file-path-wrapper">
+							<input class="file-path validate" type="text" placeholder="Upload one or more files">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="input-field col s12">
+				<i class="material-icons prefix">mode_edit</i>
+				<textarea id="content" name = "content" type = "text" class="materialize-textarea"></textarea>
+				<label for="content">介绍</label>
+			</div>
+			<p class="waves-effect waves-light btn" onclick="form_submit();" type="submit" style = "align-item: center;">
+                确认发布
+                <i class="material-icons right">send</i>
+            </p>
+			{% csrf_token %}
+		</form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	$(document).ready(function(){
+		$('#enddate').pickadate({
+			selectMonths: true, 
+			selectYears: true,
+			defaultDate: new Date(),
+			setDefaultDate: true,
+			format: 'yyyy-mm-dd',
+			onStart: function() {
+				console.log('Hello there :)');
+			},
+			onRender: function() {
+				console.log('Whoa.. rendered anew');
+			},
+			onOpen: function() {
+				console.log('Opened up');
+			},
+			onClose: function() {
+				console.log('Closed now');
+			},
+			onStop: function() {
+				console.log('See ya.');
+			},
+			onSet: function(context) {
+				console.log('Just set stuff:', context);
+			},
+			selectMonths: true, // Creates a dropdown to control month
+			selectYears: 1, // Creates a dropdown of 15 years to control year,
+			today: 'Today',
+			clear: 'Clear',
+			close: 'Ok',
+			closeOnSelect: true, // Close upon selecting a date,
+			weekdaysAbbrev: ['S','M','T','W','T','F','S'],                
+			today: 'TODAY',
+			clear: 'CANCEL',
+			close: 'OK',
+			monthsFull: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+			monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			weekdaysFull: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        });
+		$('#endtime').pickatime({
+			default: '8:00', // Set default time: 'now', '1:30AM', '16:30'
+			fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+			twelvehour: false, // Use AM/PM or 24-hour format
+			donetext: 'OK', // text for done-button
+			cleartext: 'Clear', // text for clear-button
+			canceltext: 'Cancel', // Text for cancel-button
+			autoclose: true, // automatic close timepicker
+			ampmclickable: true, // make AM PM clickable
+			aftershow: function () {
+				//console.log($('#endtime').val());
+			}, //Function for after opening timepicker
+        });
+	});
+	function form_submit(){
+		var title = $('#title').val();
+		var enddate = $('#enddate').val();
+		var endtime = $('#endtime').val();
+		var content = $('#content').val();
+		
+		//检查标题是否为空
+		var title_len = strlen(title);
+		if(title_len == 0){
+			Materialize.toast('标题可不能为空啊.', 4000);
+			return;
+		}
+		
+		//检查结束日期是否为空
+		var enddate_len = strlen(enddate);
+		if(enddate_len == 0){
+			Materialize.toast('结束日期可不能为空啊.', 4000);
+			return;
+		}
+		
+		//检查结束时间是否为空
+		var endtime_len = strlen(endtime);
+		if(endtime_len == 0){
+			Materialize.toast('结束时间可不能为空啊.', 4000);
+			return;
+		}
+		
+		//检查名字是否为空
+		var content_len = strlen(content);
+		if(content_len == 0){
+			Materialize.toast('活动介绍可不能为空啊.', 4000);
+			return;
+		}
+		signUp_new.submit();
+	};
+	function IsNum(s)
+	{
+		if(s != null){
+			var r, re;
+			re = /\d*/i;
+			r = s.match(re);
+			return (r==s)?true:false;
+		}
+		return false;
+	};
+	function strlen(str){
+		var len = 0;
+		for (var i = 0; i < str.length;i++) { 
+			var c = str.charCodeAt(i);  
+			if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) { 
+				len++; 
+			} else { 
+				len += 2; 
+			} 
+		} 
+		return len;
+	};
+</script>
+{% endblock %}

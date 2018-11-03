@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+		<title>{% block title %}{% endblock %}</title>
+
+		<!-- CSS  -->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="{% static 'css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<link rel="icon" href="{% static 'img/favicon.jpg'%}" type="image/x-icon">
+	</head>
+	<body>
+		{% include "header.html" %}
+		{% for message in messages %}
+		<div class = "messages" style = "display: none;">{{ message }}</div>
+		{% endfor %}
+		{% block content %}
+		{% endblock %}
+		{% include "footer.html" %}
+		<!--  Scripts-->
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+		<script src="{% static 'js/materialize.js' %}"></script>
+		<script src="{% static 'js/init.js' %}"></script>
+		<script>
+			$(document).ready(function(){
+				//alert('document ready!');
+				var messages = $('.messages');
+				console.log(messages);
+				for(var index = 0;index < messages.length;index++){
+					var message = messages[index];
+					console.log(message.innerHTML);
+					Materialize.toast(message.innerHTML, 4000);
+				}
+			});
+		</script>
+		{% block scripts %}
+		{% endblock %}
+	</body>
+</html>

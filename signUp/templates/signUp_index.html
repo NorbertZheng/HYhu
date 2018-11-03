@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}弘毅学堂报名系统{% endblock %}
+
+{% block content %}
+<main>
+	<div class="section no-pad-bot" id="index-banner" style="background:url({% static 'img/back2.jpg' %}) center;">
+    <div class="container">
+		<br><br>
+		<h1 class="header center orange-text">弘毅学堂活动报名系统</h1>
+		<div class="row center">
+			<h5 class="header col s12 light">下面是所有已发布的报名</h5>
+		</div>
+		<div class="row center">
+			<a href="#" id="download-button" class="btn-large waves-effect waves-light orange">开始使用</a>
+		</div>
+		<br><br>
+    </div>
+</div>
+	<div class="section orange">
+		<div class="row container">
+			{% for signup in infos %}
+				{% include 'components/card.html' %}
+			{% endfor %}
+		</div>
+	</div>
+	<div class="parallax-container">
+		<div class="parallax"><img src="{% static 'img/signup_background1.jpg' %}"></div>
+	</div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+	$(document).ready(function(){
+		$('.carousel.carousel-slider').carousel({full_width: true});
+		$('.parallax').parallax();
+		var username = "{{ username }}";
+		if(username == ""){
+			username = "陌生人";
+		}
+		var now = new Date().getHours();
+		console.log(now);
+		console.log(username);
+		var hello = '';
+		if(now >= 5 && now <= 7){
+			hello = username + '，早上好啊!';
+			Materialize.toast(hello, 4000);
+		}
+		else if(now >= 8 && now <= 11){
+			hello = username + '，上午好啊!';
+			Materialize.toast(hello, 4000);
+		}
+		else if(now >= 12 && now <= 13){
+			hello =  '已经中午啦！' + username +'快去吃饭饭鸭.';
+			Materialize.toast(hello, 4000);
+		}
+		else if(now >= 14 && now <= 17){
+			hello = username + '，下午好啊!';
+			Materialize.toast(hello, 4000);
+		}
+		else if(now >= 18 && now <= 19){
+			hello = '听说傍晚打球最赞哦！';
+			Materialize.toast(hello, 4000);
+		}
+		else if(now >= 20 && now <= 23){
+			hello = username + '，晚上好啊!';
+			Materialize.toast(hello, 4000);
+		}
+		else{
+			hello = username + '，不要肝太晚呀！';
+			Materialize.toast(hello, 4000);
+		}
+	});
+</script>
+{% endblock %}
