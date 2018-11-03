@@ -13,7 +13,13 @@
 		<link rel="icon" href="{% static 'img/favicon.jpg'%}" type="image/x-icon">
 	</head>
 	<body>
-		{% include "header.html" %}
+		{% if current_user %}
+		{% include "current_user_header.html" %}
+		{% elif current_user == None and user != None %}
+		{% include "current_user_header.html" %}
+		{% else %}
+		{% include "user_header.html" %}
+		{% endif %}
 		{% for message in messages %}
 		<div class = "messages" style = "display: none;">{{ message }}</div>
 		{% endfor %}
