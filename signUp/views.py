@@ -47,7 +47,8 @@ def index(request):
 			}
 		'''
 		infos.append(_info)
-	print(infos)
+	#print(infos)
+	current_user = user
 	template = get_template('signUp_index.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)
@@ -70,19 +71,19 @@ def new(request):
 		backgroundImgUrls = request.FILES.getlist('backgroundImgUrls', None)
 		content = request.POST["content"]
 		signup = models.SignUp.objects.create(title = title, user = user.name, content = content)
-		print(title)
-		print(enddate)
-		print(endtime)
-		print(backgroundImgUrls)
+		#print(title)
+		#print(enddate)
+		#print(endtime)
+		#print(backgroundImgUrls)
 		temp_time = enddate + " " + endtime + ":00"
-		print(temp_time)
+		#print(temp_time)
 		temp_timestamp = string_toDatetime(temp_time)
-		print(type(temp_timestamp))
-		print(type(signup.timestamp))
+		#print(type(temp_timestamp))
+		#print(type(signup.timestamp))
 		signup.deadline = temp_timestamp
 		signup.save()
-		if signup.deadline > signup.timestamp:
-			print("Great!")
+		#if signup.deadline > signup.timestamp:
+			#print("Great!")
 		if backgroundImgUrls:
 			for backgroundImgUrl in backgroundImgUrls:
 				_upload_state = upload_img(backgroundImgUrl)
@@ -95,6 +96,7 @@ def new(request):
 		#all = signup.banner_set.all()
 		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {user.studentId})))
 	small_face = user.gravatar(request, size=32)
+	current_user = user
 	face = user.gravatar(request, size=256)
 	template = get_template('signUp_new.html')
 	html = template.render(context = locals(), request = request)
@@ -116,10 +118,11 @@ def detail(request, id):
 		user = None
 	#print(signup.user)
 	try:
-		current_user = models.User.objects.get(studentId = request.session['studentId'])
+		current_user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
 		small_face = current_user.gravatar(request, size=32)
 	except:
 		current_user = None
+	#print(current_user)
 	users = signup.get_all_signUpers
 	is_signUper = signup.user_is_signUper(user.studentId)
 	template = get_template('signUp_detail.html')

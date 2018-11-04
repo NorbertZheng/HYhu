@@ -12,6 +12,8 @@ def index(request):
 		small_face = user.gravatar(request, size=32)
 	except:
 		user = None
+	#print(user)
+	current_user = user
 	template = get_template('index.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)

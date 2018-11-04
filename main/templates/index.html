@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}首页{% endblock %}
+{% block title %}弘毅学堂学生信息管理系统{% endblock %}
 
 {% block content %}
 <div class="section no-pad-bot" id="index-banner" style="background:url({% static 'img/back2.jpg' %}) center;">
@@ -24,41 +24,42 @@
         <div class="col s12 m4">
             <div class="card">
 				<div class="card-image">
-					<img src="{% static 'img/sample-1.jpg' %}">
-					<span class="card-title">午餐会预约</span>
+					<img src="{% static 'img/fassial.jpeg' %}" style = "height: 250px;">
+					<span class="card-title" style = "color: black;"><b>报名系统</b></span>
 				</div>
 				<div class="card-content">
-					<p>午餐会预约介绍</p>
+					<p>弘毅学堂所有活动都可以在这里发布并进行线上报名哟(＾Ｕ＾)ノ~ＹＯ</p><br>
 				</div>
 				<div class="card-action">
-					<a href="#">进入</a>
+					<a href="/signUp">进入</a>
 				</div>
 			</div>
 		</div>
 		<div class="col s12 m4">
 			<div class="card">
 				<div class="card-image">
-					<img src="{% static 'img/sample-1.jpg' %}">
-					<span class="card-title">活动室预约</span>
+					<img src="{% static 'img/touko.jpg' %}" style = "height: 250px;">
+					<span class="card-title" style = "color: black;"><b>活动室预约</b></span>
 				</div>
 				<div class="card-content">
-				<p>活动室预约介绍</p>
+				<p>这里是活动室预约系统，梅园三舍的活动室皆可在这预约哦~</p>
+				<p>下面是传送门↓↓↓</p>
 				</div>
 				<div class="card-action">
-					<a href="#">进入</a>
+					<a href="https://arrs.whuhyxt.org">进入</a>
 				</div>
 			</div>
         </div>
         <div class="col s12 m4">
             <div class="card">
 				<div class="card-image">
-					<img src="{% static 'img/sample-1.jpg' %}">
+					<img src="{% static 'img/sample-1.jpg' %}" style = "height: 250px;">
 					<span class="card-title">敬请期待</span>
 				</div>
 				<div class="card-content">
-					<p>敬请期待</p>
+					<p>敬请期待</p><br><br>
 				</div>
-				<div class="card-action">
+				<div class="card-action" disabled = "true">
 					<a href="#">进入</a>
 				</div>
             </div>

@@ -6,33 +6,33 @@
 {% block content %}
 <div class="container" style = "padding: 100px 0 100px 0;">
     <div class="row">
-		<div class = "col s4" style = "display: flex; flex-direction: column;align-items: center;">
+		<div class = "col s12 m4" style = "display: flex; flex-direction: column;align-items: center;">
 			<img class="img-rounded profile-thumbnail" src="{{ face }}">
 			<h3 style = "margin: 0;margin-top: 20px;">{{ user.name }}</h3>
 		</div>
-		<form class="col s8" id="edit_profile" action="" method="post">
+		<form class="col s12 m8" id="edit_profile" action="" method="post">
 			<div class="row">
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">local_library</i>
 					<input id="studentId" type="text" class="validate" disabled = "true" value = "{{ user.studentId }}">
 					<label for="studentId">学号</label>
 				</div>
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">account_circle</i>
 					<input id="role" type="text" class="validate" disabled = "true" value = "{{ user.role }}">
 					<label for="role">Role</label>
 				</div>
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">phone</i>
 					<input name = "phone" id="phone" type="tel" class="validate" value = "{{ user.phone }}">
 					<label for="phone">手机号码</label>
 				</div>
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">location_on</i>
 					<input name = "location" id="location" type="text" class="validate" value = "{{ user.location }}">
 					<label for="location">地址</label>
 				</div>
-				<div class="input-field col s6" id = "department_position_div">
+				<div class="input-field col s12 m6" id = "department_position_div">
 					<i class="material-icons prefix">child_care</i>
 					<select class="icons" name = "department_position" id = "department_position">
 						<option value="0" disabled selected>默认是没有加入部门哦</option>
@@ -45,7 +45,7 @@
 					</select>
 					<label>学生会职务</label>
 				</div>
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">details</i>
 					<select class="icons" name = "department1" id = "department1">
 						<option value="0" disabled selected>默认是没有加入部门哦</option>
@@ -62,7 +62,7 @@
 					</select>
 					<label>学生会部门</label>
 				</div>
-				<div class="input-field col s6" id = "department2">
+				<div class="input-field col s12 m6" id = "department2">
 					<i class="material-icons prefix">details</i>
 					<select class="icons" name = "department2">
 						<option value="0" disabled selected>默认是没有加入部门哦</option>
@@ -79,7 +79,7 @@
 					</select>
 					<label>学生会部门</label>
 				</div>
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">developer_board</i>
 					<select class="icons" name = "major" id = "major">
 						<option value="0" disabled selected>你现在的专业是什么呀</option>
@@ -90,7 +90,7 @@
 					</select>
 					<label>专业</label>
 				</div>
-				<div class="input-field col s6">
+				<div class="input-field col s12 m6">
 					<i class="material-icons prefix">class</i>
 					<select class="icons" name = "class_room" id = "class_room">
 						<option value="0" disabled selected>在哪个班啊</option>
@@ -101,7 +101,7 @@
 					</select>
 					<label>班级</label>
 				</div>
-				<div class="input-field col s12">
+				<div class="input-field col s12 m12">
 					<i class="material-icons prefix">description</i>
 					<textarea id="about_me" name = "about_me" type = "text" class="materialize-textarea"></textarea>
 					<label for="about_me">关于我</label>
@@ -129,7 +129,7 @@
 			department_position = $('#department_position').val();
 			//alert(department_position);
 			if(department_position == 1 || department_position == 2){
-				$('#department_position_div').attr("class", "input-field col s12");
+				$('#department_position_div').attr("class", "input-field col s12 m12");
 				$('#department1').removeAttr("disabled");
 				$('#department1').material_select();
 				$("#department2").removeAttr("disabled");
@@ -138,7 +138,7 @@
 				//console.log($("#department2").val());
 			} else if(department_position == 0){
 				//alert('disabled');
-				$('#department_position_div').attr("class", "input-field col s6");
+				$('#department_position_div').attr("class", "input-field col s12 m6");
 				$("#department1").attr("disabled","true");
 				$('#department1').material_select();
 				$("#department2").attr("disabled","true");
@@ -147,7 +147,7 @@
 				//console.log($("#department2").val());
 			} else {
 				//alert('disabled');
-				$('#department_position_div').attr("class", "input-field col s6");
+				$('#department_position_div').attr("class", "input-field col s12 m6");
 				$('#department1').removeAttr("disabled");
 				$('#department1').material_select();
 				$("#department2").attr("disabled","true");

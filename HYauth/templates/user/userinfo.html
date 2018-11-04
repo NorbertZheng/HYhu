@@ -7,10 +7,10 @@
 <main>
 	<div class="container" style = "padding: 100px 0 30px 0;">
 		<div class="row">
-			<div class="col s12 m4" style = "margin-top: 50px;">
+			<div class="col s12 m4" style = "margin-top: 50px; display: flex; flex-direction: column;align-items: center;margin-top: 100px;">
 				<img class="img-rounded profile-thumbnail" src="{{ face }}">
 			</div>
-			<div class="col s12 m8">
+			<div class="col s12 m4">
 				<h3>{{ user.name }}</h3>
 				{% if user.location %}
 				<p>
@@ -24,15 +24,12 @@
 				{% endif %}
 				{% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
 				{% include 'components/department.html' %}
-				<div class = "col s4">
-					<p style = "display: flex; align-items: center; justify-content: space-between;">
-						<span style = "align-items: center; justify-content: space-between;">
-							{% include 'components/user_major.html' %}
-						</span>
-						<span style = "align-items: center; justify-content: space-between;">
-							{% include 'components/user_class.html' %}
-						</span>
-					</p>
+				<p>
+					{% include 'components/user_major.html' %}
+				</p>
+				<p>
+					{% include 'components/user_class.html' %}
+				</p>
 				</div>
 			</div>
 		</div>

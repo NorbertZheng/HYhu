@@ -93,7 +93,7 @@ def register(request):
 			img = request.build_absolute_uri('/static/img/email_logo.png')
 			token = user.generate_confirmation_token()
 			url = request.build_absolute_uri(reverse('HYauth_confirm', args = {token}))
-			print(url)
+			#print(url)
 			info = {
 				'name': name,
 				'url': url,
@@ -102,7 +102,7 @@ def register(request):
 			to = []
 			temp = qq + '@qq.com'
 			to.append(temp)
-			print(os.getcwd())
+			#print(os.getcwd())
 			send_confirm_email('弘毅学堂信息平台激活账户', 'email/confirm.html', info, settings.EMAIL_HOST_USER, to)
 			messages.add_message(request, messages.INFO, '你已经成功提交注册啦!快去你的QQ邮箱查看邮件激活账户吧!')
 			request.session["studentId"] = studentId
@@ -140,7 +140,7 @@ def resend_confirmation(request):
 	img = request.build_absolute_uri('/static/img/email_logo.png')
 	token = user.generate_confirmation_token()
 	url = request.build_absolute_uri(reverse('HYauth_confirm', args = {token}))
-	print(url)
+	#print(url)
 	info = {
 		'name': name,
 		'url': url,
@@ -149,7 +149,7 @@ def resend_confirmation(request):
 	to = []
 	temp = qq + '@qq.com'
 	to.append(temp)
-	print(os.getcwd())
+	#print(os.getcwd())
 	send_confirm_email('弘毅学堂信息平台激活账户', 'email/confirm.html', info, settings.EMAIL_HOST_USER, to)
 	messages.add_message(request, messages.INFO, '我们又重新向你发送了一封邮件，快去你的QQ邮箱查看邮件激活账户吧!')
 	return redirect('/HYauth')
@@ -168,6 +168,7 @@ def change_password(request):
 		messages.add_message(request, messages.INFO, '重置密码成功!')
 		del request.session["studentId"]
 		return redirect('/HYauth/login')
+	current_user = user
 	small_face = user.gravatar(request, size=32)
 	template = get_template('user/change_password.html')
 	html = template.render(context = locals(), request = request)
@@ -215,7 +216,7 @@ def user(request, studentId):
 			}
 		'''
 		infos.append(_info)
-	print(infos)
+	#print(infos)
 	face = user.gravatar(request, size=256)
 	template = get_template('user/userinfo.html')
 	html = template.render(context = locals(), request = request)
@@ -321,6 +322,7 @@ def edit_profile(request):
 		user.save()
 		messages.add_message(request, messages.SUCCESS, '您已成功更新profile!')
 		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {user.studentId})))
+	current_user = user
 	small_face = user.gravatar(request, size=32)
 	face = user.gravatar(request, size=256)
 	template = get_template('user/edit_profile.html')
