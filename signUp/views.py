@@ -15,18 +15,17 @@ from signUp import models
 
 def index(request):
 	try:
-		user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
-		username = user.name
-		small_face = user.gravatar(request, size=32)
+		current_user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
+		username = current_user.name
+		small_face = current_user.gravatar(request, size=32)
 	except:
-		user = None
+		current_user = None
 	signups = models.SignUp.objects.all()
 	infos = []
 	for signup in signups:
 		images = []
 		for banner in signup.banner_set.all():
 			images.append(banner.img)
-		#if len(imgs) > 0:
 		_info = {
 			'id': signup.id,
 			'user': signup.user,
@@ -36,68 +35,48 @@ def index(request):
 			'deadline': signup.deadline,
 			'imgs': images,
 		}
-		'''
-		else:
-			_info = {
-				'user': signup.user,
-				'title': signup.title,
-				'content': signup.content,
-				'timestamp': signup.timestamp,
-				'deadline': signup.deadline,
-			}
-		'''
 		infos.append(_info)
-	#print(infos)
-	current_user = user
 	template = get_template('signUp_index.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)
 	
 def new(request):
 	try:
-		user = HYauth_models.User.objects.get(studentId = request.session["studentId"])
+		current_user = HYauth_models.User.objects.get(studentId = request.session["studentId"])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		messages.add_message(request, messages.INFO, '请先登录，才能发布报名哦.')
 		return redirect('/')
-	elif user.can(0x08) is not True:
+	elif current_user.can(0x08) is not True:
 		messages.add_message(request, messages.INFO, '对不起，您没有权限!')
-		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {user.studentId})))
+		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {current_user.studentId})))
 	if request.method == "POST":
 		title = request.POST["title"]
 		enddate = request.POST["enddate"]
 		endtime = request.POST["endtime"]
 		backgroundImgUrls = request.FILES.getlist('backgroundImgUrls', None)
 		content = request.POST["content"]
-		signup = models.SignUp.objects.create(title = title, user = user.name, content = content)
-		#print(title)
-		#print(enddate)
-		#print(endtime)
-		#print(backgroundImgUrls)
+		signup = models.SignUp.objects.create(title = title, user = current_user.name, content = content)
 		temp_time = enddate + " " + endtime + ":00"
-		#print(temp_time)
 		temp_timestamp = string_toDatetime(temp_time)
-		#print(type(temp_timestamp))
-		#print(type(signup.timestamp))
 		signup.deadline = temp_timestamp
 		signup.save()
-		#if signup.deadline > signup.timestamp:
-			#print("Great!")
 		if backgroundImgUrls:
 			for backgroundImgUrl in backgroundImgUrls:
-				_upload_state = upload_img(backgroundImgUrl)
-				if _upload_state['success']:
-					banner = models.Banner(signup = signup, img = _upload_state['message'])
-					banner.save()
-				else:
-					messages.add_message(request, messages.INFO, _upload_state['message'] + '上传失败')
+				try:
+					_upload_state = upload_img(backgroundImgUrl)
+					if _upload_state['success']:
+						banner = models.Banner(signup = signup, img = _upload_state['message'])
+						banner.save()
+					else:
+						messages.add_message(request, messages.INFO, _upload_state['message'] + '上传失败')
+				except:
+					messages.add_message(request, messages.INFO, '这个只能上传图片呀.')
 		messages.add_message(request, messages.INFO, '报名成功发布啦!')
-		#all = signup.banner_set.all()
-		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {user.studentId})))
-	small_face = user.gravatar(request, size=32)
-	current_user = user
-	face = user.gravatar(request, size=256)
+		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {current_user.studentId})))
+	small_face = current_user.gravatar(request, size=32)
+	face = current_user.gravatar(request, size=256)
 	template = get_template('signUp_new.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)
@@ -111,20 +90,17 @@ def detail(request, id):
 		messages.add_message(request, messages.INFO, '此报名不存在.')
 		return redirect('/signUp')
 	try:
+		current_user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
+		small_face = current_user.gravatar(request, size=32)
+		is_signUper = signup.user_is_signUper(current_user.studentId)
+	except:
+		current_user = None
+	try:
 		user = HYauth_models.User.objects.filter(name = signup.user).first()
-		#print(user)
 		face = user.gravatar(request, size=256)
 	except:
 		user = None
-	#print(signup.user)
-	try:
-		current_user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
-		small_face = current_user.gravatar(request, size=32)
-	except:
-		current_user = None
-	#print(current_user)
 	users = signup.get_all_signUpers
-	is_signUper = signup.user_is_signUper(user.studentId)
 	template = get_template('signUp_detail.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)
@@ -138,19 +114,19 @@ def signup(request, id):
 		messages.add_message(request, messages.INFO, '此报名不存在.')
 		return redirect('/signUp')
 	try:
-		user = HYauth_models.User.objects.get(studentId = request.session["studentId"])
+		current_user = HYauth_models.User.objects.get(studentId = request.session["studentId"])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		messages.add_message(request, messages.INFO, '请先登录再报名哦!')
 		return redirect('/HYauth/login')
-	if user.class_room == 0 or user.major == 0:
+	if current_user.class_room == 0 or current_user.major == 0:
 		messages.add_message(request, messages.INFO, '请先补全专业班级信息再报名哦!')
-		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {user.studentId})))
-	if signup.user_is_signUper(user.studentId):
+		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {current_user.studentId})))
+	if signup.user_is_signUper(current_user.studentId):
 		messages.add_message(request, messages.INFO, '你已经报名了哦.')
 		return redirect(request.build_absolute_uri(reverse('signUp_detail', args = {id})))
-	signup.user_join_signUpers(user.studentId)
+	signup.user_join_signUpers(current_user.studentId)
 	messages.add_message(request, messages.INFO, '报名成功啦!')
 	return redirect(request.build_absolute_uri(reverse('signUp_detail', args = {id})))
 	
@@ -163,16 +139,16 @@ def cancel_signup(request, id):
 		messages.add_message(request, messages.INFO, '此报名不存在.')
 		return redirect('/signUp')
 	try:
-		user = HYauth_models.User.objects.get(studentId = request.session["studentId"])
+		current_user = HYauth_models.User.objects.get(studentId = request.session["studentId"])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		messages.add_message(request, messages.INFO, '请先登录再取消报名哦!')
 		return redirect('/HYauth/login')
-	if not signup.user_is_signUper(user.studentId):
+	if not signup.user_is_signUper(current_user.studentId):
 		messages.add_message(request, messages.INFO, '你还没有报名哦.')
 		return redirect(request.build_absolute_uri(reverse('signUp_detail', args = {id})))
-	signup.user_remove_from_signUpers(user.studentId)
+	signup.user_remove_from_signUpers(current_user.studentId)
 	messages.add_message(request, messages.INFO, '成功取消报名!')
 	return redirect(request.build_absolute_uri(reverse('signUp_detail', args = {id})))
 	

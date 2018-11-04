@@ -6,11 +6,11 @@ from HYauth import models as HYauth_models
 
 class SignUp(models.Model):
 	title = models.CharField(max_length = 64, null = False)
-	timestamp = models.DateTimeField(default = timezone.now)		#timestamp = models.DateTimeField(auto_add_now = True)
+	timestamp = models.DateTimeField(default = timezone.now)
 	deadline = models.DateTimeField(default = timezone.now)
 	content = models.TextField()
 	enabled = models.BooleanField(default = False)
-	user = models.CharField(max_length = 64, null = False)		#user = models.ForeignKey(User, on_delete = models.CASCADE)冲突了
+	user = models.CharField(max_length = 64, null = False)
 	applicants = models.ManyToManyField(HYauth_models.User)
 	
 	def __str__(self):
@@ -46,16 +46,6 @@ class SignUp(models.Model):
 		
 	def get_all_signUpers(self):
 		return self.applicants.all()
-			
-'''		
-class SignUpUser(models.Model):
-	user = models.ForeignKey(User, on_delete = models.CASCADE)
-	signUp = models.ForeignKey(SignUp, on_delete = models.CASCADE)
-	pushed_at = models.DateTimeField(default = timezone.now)
-	
-	def __str__(self):
-		return self.signUp.title + " " + self.user.name
-'''
 
 class Banner(models.Model):
 	id = models.AutoField(primary_key=True)

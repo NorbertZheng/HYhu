@@ -90,6 +90,11 @@
 			Materialize.toast('你的QQ不全是数字啊?', 4000);
 			return;
 		}
+		var qq_len = strlen(qq);
+		if(qq_len == 0){
+			Materialize.toast('QQ不要忘填啊.', 4000);
+			return;
+		}
 		
 		//检查密码是否大于等于6位、两次输入的密码是否相同
 		var password_len = strlen(password);

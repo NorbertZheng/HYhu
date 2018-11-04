@@ -13,11 +13,10 @@ from HYauth.email import send_confirm_email
 
 def login(request):
 	try:
-		studentId = request.session["studentId"]
-		user = models.User.objects.get(studentId = studentId)
+		current_user = models.User.objects.get(studentId = request.session["studentId"])
 	except:
-		user = None
-	if user != None:
+		current_user = None
+	if current_user != None:
 		messages.add_message(request, messages.INFO, '你已经登陆了啊:)')
 		return redirect('/HYauth')
 	if request.method == "POST":
@@ -44,29 +43,14 @@ def logout(request):
 	return redirect('/HYauth')
 		
 def index(request):	
-	'''
-	try:
-		user = models.User.objects.get(studentId = request.session['studentId'])
-		username = user.name
-	except:
-		user = None
-	template = get_template('index.html')
-	html = template.render(context = locals(), request = request)
-	return HttpResponse(html)
-	'''
 	return redirect('/')
 	
 def register(request):
-	#state = {
-	#	'success': False,
-	#	'message': ''
-	#}
-	try:
-		studentId = request.session["studentId"]
-		user = models.User.objects.get(studentId = studentId)
+	try:	
+		current_user = models.User.objects.get(studentId = request.session["studentId"])
 	except:
-		user = None
-	if user != None:
+		current_user = None
+	if current_user != None:
 		messages.add_message(request, messages.INFO, '您已经登录啦！不用再注册了。')
 		return redirect('/HYauth')
 	if request.method == "POST":
@@ -82,9 +66,7 @@ def register(request):
 			role = None
 			temp_email = qq + '@qq.com'
 			if temp_email == settings.EMAIL_HOST_USER:
-				print('in')
 				role = models.Role.objects.filter(permissions = 0xff).first()
-				print(role)
 			if role is None:
 				role = models.Role.objects.filter(default = True).first()
 			user = models.User.objects.create(role = role, studentId = studentId, name = name, qq = qq)
@@ -93,7 +75,6 @@ def register(request):
 			img = request.build_absolute_uri('/static/img/email_logo.png')
 			token = user.generate_confirmation_token()
 			url = request.build_absolute_uri(reverse('HYauth_confirm', args = {token}))
-			#print(url)
 			info = {
 				'name': name,
 				'url': url,
@@ -102,7 +83,6 @@ def register(request):
 			to = []
 			temp = qq + '@qq.com'
 			to.append(temp)
-			#print(os.getcwd())
 			send_confirm_email('弘毅学堂信息平台激活账户', 'email/confirm.html', info, settings.EMAIL_HOST_USER, to)
 			messages.add_message(request, messages.INFO, '你已经成功提交注册啦!快去你的QQ邮箱查看邮件激活账户吧!')
 			request.session["studentId"] = studentId
@@ -115,14 +95,14 @@ def register(request):
 	
 def confirm(request, token):
 	try:
-		user = models.User.objects.get(studentId = request.session['studentId'])
+		current_user = models.User.objects.get(studentId = request.session['studentId'])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		return redirect('/HYauth/login')
-	if user.confirmed:
+	if current_user.confirmed:
 		return redirect('/HYauth')
-	if user.confirm(token):
+	if current_user.confirm(token):
 		messages.add_message(request, messages.SUCCESS, 'You have confirmed your account. Thanks!')
 	else:
 		messages.add_message(request, messages.INFO, 'The confirmation link is invalid or has expired.')
@@ -130,17 +110,16 @@ def confirm(request, token):
 	
 def resend_confirmation(request):
 	try:
-		user = models.User.objects.get(studentId = request.session['studentId'])
+		current_user = models.User.objects.get(studentId = request.session['studentId'])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		return redirect('/HYauth/login')
-	if user.confirmed:
+	if current_user.confirmed:
 		return redirect('/HYauth')
 	img = request.build_absolute_uri('/static/img/email_logo.png')
 	token = user.generate_confirmation_token()
 	url = request.build_absolute_uri(reverse('HYauth_confirm', args = {token}))
-	#print(url)
 	info = {
 		'name': name,
 		'url': url,
@@ -149,27 +128,25 @@ def resend_confirmation(request):
 	to = []
 	temp = qq + '@qq.com'
 	to.append(temp)
-	#print(os.getcwd())
 	send_confirm_email('弘毅学堂信息平台激活账户', 'email/confirm.html', info, settings.EMAIL_HOST_USER, to)
 	messages.add_message(request, messages.INFO, '我们又重新向你发送了一封邮件，快去你的QQ邮箱查看邮件激活账户吧!')
 	return redirect('/HYauth')
 	
 def change_password(request):
 	try:
-		user = models.User.objects.get(studentId = request.session['studentId'])
+		current_user = models.User.objects.get(studentId = request.session['studentId'])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		return redirect('/HYauth/login')
 	if request.method == "POST":
 		password = request.POST["newPassword"]
-		user.password_hash = user.get_password_hash(password)
-		user.save()
+		current_user.password_hash = user.get_password_hash(password)
+		current_user.save()
 		messages.add_message(request, messages.INFO, '重置密码成功!')
 		del request.session["studentId"]
 		return redirect('/HYauth/login')
-	current_user = user
-	small_face = user.gravatar(request, size=32)
+	small_face = current_user.gravatar(request, size=32)
 	template = get_template('user/change_password.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)
@@ -182,8 +159,6 @@ def user(request, studentId):
 			'is_administrator': current_user.is_administrator(),
 		}
 		small_face = current_user.gravatar(request, size=32)
-		#print(current_user.is_administrator())
-		#print(current_user.role.permissions)
 	except:
 		current_user = None
 	user = models.User.objects.filter(studentId = studentId).first()
@@ -195,7 +170,6 @@ def user(request, studentId):
 		images = []
 		for banner in signup.banner_set.all():
 			images.append(banner.img)
-		#if len(imgs) > 0:
 		_info = {
 			'id': signup.id,
 			'user': signup.user,
@@ -205,18 +179,7 @@ def user(request, studentId):
 			'deadline': signup.deadline,
 			'imgs': images,
 		}
-		'''
-		else:
-			_info = {
-				'user': signup.user,
-				'title': signup.title,
-				'content': signup.content,
-				'timestamp': signup.timestamp,
-				'deadline': signup.deadline,
-			}
-		'''
 		infos.append(_info)
-	#print(infos)
 	face = user.gravatar(request, size=256)
 	template = get_template('user/userinfo.html')
 	html = template.render(context = locals(), request = request)
@@ -242,7 +205,10 @@ def edit_profile_admin(request, studentId):
 	if request.method == "POST":
 		phone = request.POST["phone"]
 		location = request.POST["location"]
-		department_position = int(request.POST["department_position"], 10)
+		try:
+			department_position = int(request.POST["department_position"], 10)
+		except:
+			department_position = 0
 		try:
 			department1 = int(request.POST["department1"], 10)
 		except:
@@ -251,8 +217,6 @@ def edit_profile_admin(request, studentId):
 			department2 = int(request.POST["department2"], 10)
 		except:
 			department2 = 0
-		#print(department1)
-		#print(type(department2))
 		department = department1|department2
 		try:
 			major = int(request.POST["major"], 10)
@@ -280,15 +244,18 @@ def edit_profile_admin(request, studentId):
 	
 def edit_profile(request):
 	try:
-		user = models.User.objects.get(studentId = request.session['studentId'])
+		current_user = models.User.objects.get(studentId = request.session['studentId'])
 	except:
-		user = None
-	if user == None:
+		current_user = None
+	if current_user == None:
 		return redirect('/HYauth/login')
 	if request.method == "POST":
 		phone = request.POST["phone"]
 		location = request.POST["location"]
-		department_position = int(request.POST["department_position"], 10)
+		try:
+			department_position = int(request.POST["department_position"], 10)
+		except:
+			department_position = 0
 		try:
 			department1 = int(request.POST["department1"], 10)
 		except:
@@ -312,19 +279,18 @@ def edit_profile(request):
 		except:
 			class_room = 0
 		about_me = request.POST["about_me"]
-		user.phone = phone
-		user.location = location
-		user.department_position = department_position
-		user.department = department
-		user.major = major
-		user.class_room = class_room
-		user.about_me = about_me
-		user.save()
+		current_user.phone = phone
+		current_user.location = location
+		current_user.department_position = department_position
+		current_user.department = department
+		current_user.major = major
+		current_user.class_room = class_room
+		current_user.about_me = about_me
+		current_user.save()
 		messages.add_message(request, messages.SUCCESS, '您已成功更新profile!')
-		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {user.studentId})))
-	current_user = user
-	small_face = user.gravatar(request, size=32)
-	face = user.gravatar(request, size=256)
+		return redirect(request.build_absolute_uri(reverse('HYauth_user', args = {current_user.studentId})))
+	small_face = current_user.gravatar(request, size=32)
+	face = current_user.gravatar(request, size=256)
 	template = get_template('user/edit_profile.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)

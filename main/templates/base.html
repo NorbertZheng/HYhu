@@ -13,7 +13,7 @@
 		<link rel="icon" href="{% static 'img/favicon.jpg'%}" type="image/x-icon">
 	</head>
 	<body>
-		{% include "current_user_header.html" %}
+		{% include "header.html" %}
 		{% for message in messages %}
 		<div class = "messages" style = "display: none;">{{ message }}</div>
 		{% endfor %}

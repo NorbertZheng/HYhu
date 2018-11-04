@@ -7,13 +7,21 @@ from HYauth import models as HYauth_models
 
 def index(request):	
 	try:
-		user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
-		username = user.name
-		small_face = user.gravatar(request, size=32)
+		current_user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
+		username = current_user.name
+		small_face = current_user.gravatar(request, size=32)
 	except:
-		user = None
-	#print(user)
-	current_user = user
+		current_user = None
 	template = get_template('index.html')
+	html = template.render(context = locals(), request = request)
+	return HttpResponse(html)
+	
+def about(request):
+	try:
+		current_user = HYauth_models.User.objects.get(studentId = request.session['studentId'])
+		small_face = current_user.gravatar(request, size=32)
+	except:
+		current_user = None
+	template = get_template('about.html')
 	html = template.render(context = locals(), request = request)
 	return HttpResponse(html)
